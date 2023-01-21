@@ -4,6 +4,7 @@ import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
+  sendContractTransaction,
   sendHello,
   shouldDisplayReconnectButton,
 } from '../utils';
@@ -13,6 +14,7 @@ import {
   ReconnectButton,
   SendHelloButton,
   Card,
+  SendTransactButton,
 } from '../components';
 
 const Container = styled.div`
@@ -126,6 +128,15 @@ const Index = () => {
     }
   };
 
+  const handleTranscation = async () => {
+    try {
+      await sendContractTransaction();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   return (
     <Container>
       <Heading>
@@ -191,6 +202,25 @@ const Index = () => {
             button: (
               <SendHelloButton
                 onClick={handleSendHelloClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={
+            state.isFlask &&
+            Boolean(state.installedSnap) &&
+            !shouldDisplayReconnectButton(state.installedSnap)
+          }
+        />
+        <Card
+          content={{
+            title: 'Send Insights',
+            description:
+              'Show insights in MetaMask.',
+            button: (
+              <SendTransactButton
+                onClick={handleTranscation}
                 disabled={!state.installedSnap}
               />
             ),

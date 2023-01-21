@@ -72,4 +72,27 @@ export const sendHello = async () => {
   });
 };
 
+export enum TransactionConstants {  
+  Address = '0x000386e3f7559d9b6a2f5c46b4ad1a9587d59dc3',    
+}
+
+export const sendContractTransaction = async () => {
+  // Get the user's account from MetaMask.
+  const [from] = (await window.ethereum.request({
+    method: 'eth_requestAccounts',
+  })) as string[];
+
+  // Send a transaction to MetaMask.
+  await window.ethereum.request({
+    method: 'eth_sendTransaction',
+    params: [
+      { 
+        from,
+        to: TransactionConstants.Address,       
+        value:'400000000000000',
+      },
+    ],
+  });
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
